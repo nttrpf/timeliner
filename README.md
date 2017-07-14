@@ -29,7 +29,7 @@ cf bind-service ${REDIS_INSTANCE_NAME}
 cf env #Check current environment variables
 cf set-env  SLACK_TIMELINE_MSG_REDIS redis://:${REDIS_PASSWD}@${REDIS_IPADDR}:${REDIS_PORT} #Don't forget a colon character before the password.
 cf set-env  SLACK_TIMELINE_RANKING_ENABLED 1
-cf set-env  REDIS_URL redis://:rmhoand9zvyk3o0w@172.20.168.101:32771
+cf set-env  REDIS_URL redis://:${REDIS_PASSWD}@${REDIS_IPADDR}:${REDIS_PORT}
 cf set-env  TZ Asia/Tokyo
 cf set-env  SLACK_TIMELINE_RANKING_CRONJOB "0 0 10 * * *"
 cf env #Check the diff before you see
