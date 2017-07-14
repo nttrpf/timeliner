@@ -206,6 +206,7 @@ module.exports = (robot) ->
   robot.adapter.client.rtm.on 'raw_message', (msg) ->
     msg = JSON.parse(msg)
 
+
     # bot_message
     if msg.type is 'message' and msg.subtype is 'bot_message'
       return # ignore bot message
@@ -221,11 +222,19 @@ module.exports = (robot) ->
       if msg.subtype is 'file_share' # file share
         message = removeFormattingLink msg.text
 
-      message_channel = robot.adapter.client.rtm.dataStore.getChannelGroupOrDMById(msg.channel).name
+      message_channel_obj = robot.adapter.client.rtm.dataStore.getChannelGroupOrDMById(msg.channel)
 
       username = robot.adapter.client.rtm.dataStore.getUserById(msg.user).name
       originalTs = msg.ts
       originalChannel = msg.channel
+
+      # skip copying message of private channel but just count it
+      if message_channel_obj.is_group? and message_channel_obj.is_group 
+        sumUpMessagesPerChannelId(originalChannel)
+        return
+
+      message_channel = message_channel_obj.name
+ 
       robot.logger.debug "originalTs: #{originalTs} originalChannel: #{originalChannel}"
       userImage = robot.adapter.client.rtm.dataStore.users[msg.user].profile.image_48
       if userImage is '' # set default userImage
